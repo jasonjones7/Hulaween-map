@@ -20,7 +20,7 @@
   main { display: grid; grid-template-columns: minmax(300px, 1fr) 420px; gap: 16px; padding: 16px; align-items: start; }
   @media (max-width: 900px) { main { grid-template-columns: 1fr; } }
 
-  .mapwrap { position: relative; max-width: 760px; margin: 0 auto; width: 100%; border-radius: 12px; overflow: hidden;
+  .mapwrap { position: relative; aspect-ratio: 3 / 4; flex: none; max-width: 760px; margin: 0 auto; width: 100%; border-radius: 12px; overflow: hidden;
              border: 1px solid var(--line); touch-action: none; cursor: grab; user-select: none; -webkit-user-select: none; }
   .mapwrap.drag { cursor: grabbing; }
   .zoomlayer { position: relative; transform-origin: 0 0; --k: 1; will-change: transform; }
@@ -288,14 +288,12 @@
     ty = Math.min(0, Math.max(h * (1 - z), ty));
     zl.style.transform = `translate(${tx}px, ${ty}px) scale(${z})`;
     zl.style.setProperty("--k", 1 / z);
-    mw.style.height = z === 1 ? "" : mw.clientHeight + "px";
   }
-  const baseH = () => { mw.style.height = ""; const h = zl.offsetHeight; return h; };
   function zoomAt(px, py, nz) {            // keep the map point under (px,py) fixed
     nz = Math.min(MAXZ, Math.max(1, nz));
     const mx = (px - tx) / z, my = (py - ty) / z;
     z = nz; tx = px - mx * z; ty = py - my * z;
-    mw.style.height = baseH() + "px"; applyView();
+    applyView();
   }
   const rect = () => mw.getBoundingClientRect();
   mw.addEventListener("wheel", e => { e.preventDefault(); const r = rect(); zoomAt(e.clientX - r.left, e.clientY - r.top, z * Math.exp(-e.deltaY * 0.0015)); }, { passive: false });
