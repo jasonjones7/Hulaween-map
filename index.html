@@ -219,7 +219,12 @@
 
   $("q").addEventListener("input", renderResults);
   $("showX").addEventListener("change", () => { renderVenue(); renderResults(); });
-  $("clear").onclick = () => { if (mine.size && confirm("Remove all artists from your schedule?")) { mine.clear(); save(); render(); } };
+  let armed = false;
+  $("clear").onclick = () => {
+    if (!mine.size) return;
+    if (!armed) { armed = true; $("clear").textContent = "tap again to confirm"; setTimeout(() => { armed = false; $("clear").textContent = "clear all"; }, 3000); return; }
+    armed = false; $("clear").textContent = "clear all"; mine.clear(); save(); render();
+  };
   render();
 })();
 </script>
